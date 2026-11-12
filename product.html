@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Schoen bekijken - De Gouden Stap</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="container nav">
+<a class="brand" href="index.html"><span class="logo">GS</span><span><strong data-site-name>De Gouden Stap</strong><small data-tagline></small></span></a>
+<nav class="menu"><a href="index.html">Home</a><a class="active" href="collectie.html">Onze Collectie</a><a href="categorieen.html">Categorieën</a><a href="admin.html">Beheer</a></nav>
+</div></header>
+<main class="container product-detail" id="product-content">
+<p>Product wordt geladen…</p>
+</main>
+<footer data-footer></footer>
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
+<script>
+function safeText(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function initProduct(){
+  const data=await loadData();
+  applySite(data);
+  const id=Number(new URLSearchParams(location.search).get('id'));
+  const product=Number.isInteger(id)&&id>=0?data.products[id]:null;
+  const root=document.getElementById('product-content');
+  if(!product){
+    root.innerHTML='<div class="product-not-found"><h1>Schoen niet gevonden</h1><p>Deze schoen bestaat niet (meer) in onze collectie.</p><a class="btn" href="collectie.html">Terug naar collectie</a></div>';
+    return;
+  }
+  const shopLink=product.url&&/^https?:\/\//i.test(product.url)
+    ? `<a class="btn" href="${safeText(product.url)}" target="_blank" rel="noopener">Bekijk bij de webshop ↗</a>` : '';
+  root.innerHTML=`
+    <a class="back-link" href="collectie.html">← Terug naar collectie</a>
+    <div class="detail-layout">
+      <div class="detail-image-wrap"><img class="detail-image" src="${safeText(product.image||'')}" alt="${safeText(product.name)}"></div>
+      <div class="detail-info">
+        <div class="eyebrow">${safeText(product.category)}</div>
+        <h1>${safeText(product.name)}</h1>
+        <p>Ontdek deze schoen uit de collectie van De Gouden Stap.</p>
+        ${shopLink}
+        <p class="detail-hint">${shopLink?'Via de knop kun je ook de webshop openen.':'Meer informatie of een webshoplink kan worden toegevoegd via Beheer.'}</p>
+      </div>
+    </div>`;
+}
+initProduct().catch(error=>{
+  document.getElementById('product-content').innerHTML='<p>De schoen kon niet worden geladen. Probeer de pagina opnieuw.</p>';
+  console.error(error);
+});
+</script>
+</body>
+</html>
