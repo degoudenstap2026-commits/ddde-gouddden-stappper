@@ -29,7 +29,7 @@ async function initProduct(){
     root.innerHTML='<div class="product-not-found"><h1>Schoen niet gevonden</h1><p>Deze schoen bestaat niet (meer) in onze collectie.</p><a class="btn" href="collectie.html">Terug naar collectie</a></div>';
     return;
   }
-  const shopLink=product.url&&/^https?:\/\//i.test(product.url)
+  const shopLink=product.url&&/^https?:\/\//i.test(https://nl.penworldwide.org/buybuttons/nl01124/btn/c44d8309-1729-4735-bc73-cd0a980dbf37/)
     ? `<a class="btn" href="${safeText(product.url)}" target="_blank" rel="noopener">Bekijk bij de webshop ↗</a>` : '';
   root.innerHTML=`
     <a class="back-link" href="collectie.html">← Terug naar collectie</a>
